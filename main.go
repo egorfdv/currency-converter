@@ -27,8 +27,12 @@ func main() {
 			fmt.Println("Error! Select the correct currency")
 			continue
 		}
+		checkOriginalAndTargetCurrency := checkOriginalAndTargetCurrency(originalCurrency, targetCurrency)
+		if checkOriginalAndTargetCurrency != nil {
+			fmt.Println("Error! Original currency is the same as the target currency")
+		}
 		result := userDataCalculation(originalCurrency, amountToConvert, targetCurrency)
-		fmt.Printf("Итог: %.2f\n", result)
+		fmt.Printf("Outcome: %.2f\n", result)
 		userChoice := userMenu()
 		if !userChoice {
 			break
@@ -52,7 +56,7 @@ func getUserInputAmountToConvert() (float64, error) {
 	var amountToConvert float64
 	fmt.Print("Enter the amount to convert: ")
 	fmt.Scan(&amountToConvert)
-	if amountToConvert < 0.0 {
+	if amountToConvert <= 0.0 {
 		return 0.0, errors.New("ERROR")
 	}
 	return amountToConvert, nil
@@ -62,19 +66,26 @@ func getUserInputTargetCurrency(originalСurrency string) (string, error) {
 	var targetCurrency string
 	switch originalСurrency {
 	case "USD":
-		fmt.Print("Select the original currency(EUR/RUB): ")
+		fmt.Print("Select the target currency(EUR/RUB): ")
 		fmt.Scan(&targetCurrency)
 	case "EUR":
-		fmt.Print("Select the original currency(USD/RUB): ")
+		fmt.Print("Select the target currency(USD/RUB): ")
 		fmt.Scan(&targetCurrency)
 	case "RUB":
-		fmt.Print("Select the original currency(USD/EUR): ")
+		fmt.Print("Select the target currency(USD/EUR): ")
 		fmt.Scan(&targetCurrency)
 	}
 	if targetCurrency == "USD" || targetCurrency == "EUR" || targetCurrency == "RUB" {
 		return targetCurrency, nil
 	}
 	return "", errors.New("ERROR")
+}
+
+func checkOriginalAndTargetCurrency(originalСurrency string, targetCurrency string) error {
+	if originalСurrency == targetCurrency {
+		return errors.New("ERR")
+	}
+	return nil
 }
 
 func userDataCalculation(originalСurrency string, amountToConvert float64, targetCurrency string) float64 {
